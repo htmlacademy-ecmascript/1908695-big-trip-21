@@ -13,7 +13,6 @@ function createHeaderInfoTemplate(title, startDate, endDate, cost) {
   </p>
 </section>`;
 }
-console.log()
 
 export default class HeaderInfoView {
   constructor(title, startDate, endDate, cost) {

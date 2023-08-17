@@ -13,6 +13,10 @@ import FormDestinationPhotos from '../view/form-event/form-event-destination-pho
 const tripEventsContainerElement = document.querySelector('.trip-events');
 
 export default class TripEventsPresenter {
+  constructor(eventPoints) {
+    this.eventPoints = eventPoints;
+  }
+
   tripEventsList = new TripEventsListView();
 
   firstTripItem = new TripItemView();
@@ -32,6 +36,7 @@ export default class TripEventsPresenter {
   formDestintaionPhotos = new FormDestinationPhotos();
 
   init () {
+    this.points = [...this.eventPoints.getPoints()];
     render(this.tripEventsList, tripEventsContainerElement);
 
     render (this.firstTripItem, this.tripEventsList.getElement());
@@ -50,9 +55,11 @@ export default class TripEventsPresenter {
 
     render(this.formDestintaionPhotos, this.formSectionDetails.getElement());
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.points.length; i++) {
       const tripItem = new TripItemView();
-      render(new TripEventView('MAR 18', 'taxi', 'Taxi Amsterdam', '10:30', '11:00', '30M', 20), tripItem.getElement());
+
+      render(new TripEventView(this.points[i]), tripItem.getElement());
+
       render(tripItem, this.tripEventsList.getElement());
     }
   }

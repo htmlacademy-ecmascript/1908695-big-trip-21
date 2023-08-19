@@ -1,221 +1,118 @@
-import { getRandomArrayElement } from '../utils/utils.js';
+import { getRandomArrayElement, getRandomPositiveInteger } from '../utils/utils.js';
 
-const points = [
-  {
-    id: 'f4b62099-293f-4c3d-a702-94eec4a2808c',
-    basePrice: 110,
-    dateFrom: '2023-09-10T22:55:56.845Z',
-    dateTo: '2023-09-11T11:22:13.375Z',
-    destination: 'cfe416cq-10xa-ye10-8077-2fs9a01edcab',
-    isFavorite: true,
-    offers: [
-      'b4c3e4e6-9053-42ce-b747-e281314baa31',
-      'b4c3e4e6-9053-42ce-b747-e281314baa30'
-    ],
-    type: 'taxi',
-  },
-  {
-    id: 'f4b62099-293f-4c3d-a702-94eec4a2808d',
-    basePrice: 210,
-    dateFrom: '2023-09-13T23:55:56.845Z',
-    dateTo: '2023-09-18T07:22:13.375Z',
-    destination: 'cfe416cq-10xa-ye10-8077-2fs9a01edc13',
-    isFavorite: false,
-    offers: [
-      'b4c3e4e6-9053-42ce-b747-e281314baa35',
-    ],
-    type: 'flight',
-  },
-  {
-    id: 'f4b62099-293f-4c3d-a702-94eec4a2808v',
-    basePrice: 50,
-    dateFrom: '2023-09-19T13:00:56.845Z',
-    dateTo: '2023-09-20T12:20:13.375Z',
-    destination: 'cfe416cq-10xa-ye10-8077-2fs9a01edcab',
-    isFavorite: false,
-    offers: [
-      'b4c3e4e6-9053-42ce-b747-e281314baa41',
-    ],
-    type: 'drive',
-  },
-  {
-    id: 'f4b62099-293f-4c3d-a702-94eec4a2808v',
-    basePrice: 300,
-    dateFrom: '2023-09-21T13:15:56.845Z',
-    dateTo: '2023-09-21T18:20:13.375Z',
-    destination: 'cfe416cq-10xa-ye10-8077-2fs9a01edc12',
-    isFavorite: true,
-    offers: [
-      'b4c3e4e6-9053-42ce-b747-e281314baa40',
-    ],
-    type: 'sightseeing',
-  },
-  {
-    id: 'f4b62099-293f-4c3d-a702-94eec4a2808v',
-    basePrice: 300,
-    dateFrom: '2023-09-21T22:00:56.845Z',
-    dateTo: '2023-09-21T23:23:13.375Z',
-    destination: 'cfe416cq-10xa-ye10-8077-2fs9a01edc12',
-    isFavorite: true,
-    type: 'check-in',
-  },
-];
+const Destination = {
+  AMOUNT: 10,
+  DESCRIPTION: ['a true asian pearl', 'a perfect place to stay with a family', 'a beautiful old town', '', 'full of of cozy canteens where you can try the best coffee in the Middle East', 'for those who value comfort and coziness', 'middle-eastern paradise', 'famous for its crowded street markets with the best street food in Asia', 'with crowded streets'],
+  NAME: ['Monza', 'Piza', 'Rimini', 'Palermo', 'Turin', 'Milan', 'Monaco', 'Barcelona', 'Arezzo', 'Geneva'],
+  PICTURES: [
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/18.jpg',
+      description: 'Vien with crowded streets',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/5.jpg',
+      description: 'Geneva a true asian pearl',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/20.jpg',
+      description: 'Geneva with a beautiful old town',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/16.jpg',
+      description: 'Vien a perfect place to stay with a family'
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/10.jpg',
+      description: 'Vien famous for its crowded street markets with the best street food in Asia'
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/11.jpg',
+      description: 'Vien full of of cozy canteens where you can try the best coffee in the Middle East'
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/13.jpg',
+      description: 'Vien with crowded streets'
+    }
+  ],
+  MIN_PICTURES_AMOUNT: 0,
+  MAX_PICTURES_AMOUNT: 5,
+};
 
-const offers = [
-  {
-    type: 'taxi',
-    offers: [
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa30',
-        title: 'Meet with a table',
-        price: 5
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa31',
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa32',
-        title: 'Order Uber',
-        price: 20
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa33',
-        title: 'Silence mode',
-        price: 10
-      },
-    ]},
-  {
-    type: 'flight',
-    offers: [
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa34',
-        title: 'Add luggage',
-        price: 30
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa35',
-        title: 'Switch to comfort class',
-        price: 100
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa36',
-        title: 'Add meal',
-        price: 15
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa37',
-        title: 'Travel by train',
-        price: 40
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa38',
-        title: 'Choose seats',
-        price: 5
-      },
-    ]},
-  {
-    type: 'sightseeing',
-    offers: [
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa39',
-        title: 'Book tickets',
-        price: 40
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa40',
-        title: 'Lunch in city',
-        price: 30
-      },
-    ]},
-  {
-    type: 'drive',
-    offers: [
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa41',
-        title: 'Rent a car',
-        price: 200
-      },
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa43',
-        title: 'Personal driver',
-        price: 1500
-      },
-    ]},
-  {
-    type: 'check-in',
-    offers: [
-      {
-        id: 'b4c3e4e6-9053-42ce-b747-e281314baa42',
-        title: 'Add breakfast',
-        price: 50
-      },
-    ]}
-];
+const Offer = {
+  TYPE: ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'],
+  OFFERS: {
+    TITLE: ['Upgrade to a business class', 'Choose the radio station', 'Choose temperature', 'Order meal', 'Wake up at a certain time', 'Add luggage', 'Business lounge', 'Choose the time of check-in', 'Order a meal from the restaurant', 'With air conditioning', 'Choose live music', 'Choose VIP area' ],
+    MIN_PRICE: 50,
+    MAX_PRICE: 150,
+    MIN_OFFERS_AMOUNT: 0,
+    MAX_OFFERS_AMOUNT: 5,
+  }
+};
 
-const destinations = [
-  {
-    id: 'cfe416cq-10xa-ye10-8077-2fs9a01edcdd',
-    name: 'Bergamo',
-  },
-  {
-    id: 'cfe416cq-10xa-ye10-8077-2fs9a01edcab',
-    description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
-    name: 'Chamonix',
-    pictures: [
-      {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Chamonix parliament building',
-      }]},
-  {
-    id: 'cfe416cq-10xa-ye10-8077-2fs9a01edc11',
-    description: 'Monaco ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-    name: 'Monaco',
-    pictures: [
-      {
-        src: 'https://loremflickr.com/248/152?random=1',
-        description: 'Picture description',
-      },
-      {
-        src: 'https://loremflickr.com/248/152?random=2',
-        description: 'Picture description number two',
-      }]},
-  {
-    id: 'cfe416cq-10xa-ye10-8077-2fs9a01edc12',
-    description: 'Monza Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
-    name: 'Monza',
-    pictures: [
-      {
-        src: 'https://loremflickr.com/248/152?random=3',
-        description: 'Picture description number three',
-      },
-      {
-        src: 'https://loremflickr.com/248/152?random=4',
-        description: 'Picture description number four',
-      },
-      {
-        src: 'https://loremflickr.com/248/152?random=5',
-        description: 'Picture description number five',
-      }]},
-  {
-    id: 'cfe416cq-10xa-ye10-8077-2fs9a01edc13',
-    description: 'Rimini Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-    name: 'Rimini',
-    pictures: [
-      {
-        src: 'https://loremflickr.com/248/152?random=6',
-        description: 'Picture description number six',
-      },
-      {
-        src: 'https://loremflickr.com/248/152?random=7',
-        description: 'Picture description number seven',
-      },
-      {
-        src: 'https://loremflickr.com/248/152?random=8',
-        description: 'Picture description number eight',
-      }]},
-];
+const Point = {
+  AMOUNT: 10,
+  MIN_BASE_PRICE: 100,
+  MAX_BASE_PRICE: 500,
+  IS_FAVORITE: [true, false],
+  DATE_YEAR: 2024,
+  DATE_START_MONTH: 0,
+  DATA_END_MONTH: 11,
+  DATE_START_DAY: 1,
+  DATE_END_DAY: 31,
+  DATE_START_HOUR: 0,
+  DATE_END_HOUR: 24,
+  DATE_START_MINUTES: 0,
+  DATE_END_MINUTES: 60,
+};
+
+function getOffer () {
+  return Offer.TYPE.map((offer) => ({
+    type: offer,
+    offers: Array.from({length:getRandomPositiveInteger(Offer.OFFERS.MIN_OFFERS_AMOUNT, Offer.OFFERS.MAX_OFFERS_AMOUNT)}, (_, index) => ({
+      title: getRandomArrayElement(Offer.OFFERS.TITLE),
+      price: getRandomPositiveInteger(Offer.OFFERS.MIN_PRICE, Offer.OFFERS.MAX_PRICE),
+      id: `offer ${index++}`,
+    }))
+  }));
+}
+
+function getDestination (index) {
+  return {
+    id: `destination ${index}`,
+    description: getRandomArrayElement(Destination.DESCRIPTION),
+    name: getRandomArrayElement(Destination.NAME),
+    pictures: Array.from({length:getRandomPositiveInteger(Destination.MIN_PICTURES_AMOUNT, Destination.MAX_PICTURES_AMOUNT)}, () => getRandomArrayElement(Destination.PICTURES))
+  };
+}
+
+const destinations = Array.from({length:Destination.AMOUNT}, (_, index) => getDestination(index));
+
+const offers = getOffer() ;
+
+function getPoint (index) {
+
+  const {type, offers: offerItems} = getRandomArrayElement(offers);
+
+  return {
+    id: `point ${index}`,
+
+    basePrice: getRandomPositiveInteger(Point.MIN_BASE_PRICE, Point.MAX_BASE_PRICE),
+
+    dateFrom: new Date(Point.DATE_YEAR, getRandomPositiveInteger(Point.DATE_START_MONTH, Point.DATA_END_MONTH), getRandomPositiveInteger(Point.DATE_START_DAY, Point.DATE_END_DAY), getRandomPositiveInteger(Point.DATE_START_HOUR, Point.DATE_END_HOUR), getRandomPositiveInteger(Point.DATE_START_MINUTES, Point.DATE_END_MINUTES)).toISOString(),
+
+    dateTo: new Date(Point.DATE_YEAR, getRandomPositiveInteger(Point.DATE_START_MONTH, Point.DATA_END_MONTH), getRandomPositiveInteger(Point.DATE_START_DAY, Point.DATE_END_DAY), getRandomPositiveInteger(Point.DATE_START_HOUR, Point.DATE_END_HOUR), getRandomPositiveInteger(Point.DATE_START_MINUTES, Point.DATE_END_MINUTES)).toISOString(),
+
+    isFavorite: getRandomArrayElement(Point.IS_FAVORITE),
+
+    type: type,
+
+    offers: [...new Set(Array.from({length:getRandomPositiveInteger(Offer.OFFERS.MIN_OFFERS_AMOUNT, offerItems.length)}, () => getRandomArrayElement(offerItems.map(({id}) => id))))],
+
+    destination: getRandomArrayElement(destinations.map(({id}) => id))
+  };
+}
+
+const points = Array.from({length:Point.AMOUNT}, (_, index) => getPoint(index));
 
 function getRandomPoint () {
   return getRandomArrayElement(points);

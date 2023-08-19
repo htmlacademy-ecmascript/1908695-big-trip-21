@@ -10,25 +10,26 @@ function getCityName (point) {
 
 function getOffers (point) {
   const pointTypeOffer = offers.find((offer) => offer.type === point.type);
-  return pointTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
+  const of = pointTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
+ // console.log(of);
+  return of;
 }
 
 function createOfferTemplate (offerTitle, offerPrice) {
   return `<li class="event__offer">
   <span class="event__offer-title">${offerTitle}</span>
-  &plus;&euro;&nbsp;
+  &euro;&nbsp;
   <span class="event__offer-price">${offerPrice}</span>
 </li>`;
 }
 
 function renderChosenOffers (point) {
-  let offerItem;
-  if (point.offers) {
-    getOffers(point).forEach((place) => {
-      offerItem = createOfferTemplate(place.title, place.price);
-    });
-  }
-  return offerItem;
+  const listItems = [];
+  const options = getOffers(point);
+  options.forEach((option) => {
+    listItems.push(createOfferTemplate(option.title, option.price));
+  });
+  return listItems.join('');
 }
 
 function createTripEventTemplate (point) {
@@ -52,8 +53,9 @@ function createTripEventTemplate (point) {
       &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
-    <ul class="event__selected-offers ${point.offers ? '' : 'hidden'}">
+    <ul class="event__selected-offers ${point.offers.length ? '' : 'hidden'}">
     ${renderChosenOffers(point)}
+
     </ul>
     <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''} type="button">
       <span class="visually-hidden">Add to favorite</span>

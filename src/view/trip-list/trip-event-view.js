@@ -10,9 +10,7 @@ function getCityName (point) {
 
 function getOffers (point) {
   const pointTypeOffer = offers.find((offer) => offer.type === point.type);
-  const of = pointTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
- // console.log(of);
-  return of;
+  return pointTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
 }
 
 function createOfferTemplate (offerTitle, offerPrice) {

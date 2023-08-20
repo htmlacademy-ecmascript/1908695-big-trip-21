@@ -32,6 +32,34 @@ const Destination = {
     {
       src: 'https://21.objects.pages.academy/static/destinations/13.jpg',
       description: 'Vien with crowded streets'
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/9.jpg',
+      description: 'Rotterdam a perfect place to stay with a family',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/15.jpg',
+      description: 'Rotterdam in a middle of Europe',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/4.jpg',
+      description: 'Rotterdam middle-eastern paradise'
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/18.jpg',
+      description: 'Sochi a perfect place to stay with a family',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/7.jpg',
+      description: 'Sochi in a middle of Europe',
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/9.jpg',
+      description: 'Sochi famous for its crowded street markets with the best street food in Asia'
+    },
+    {
+      src: 'https://21.objects.pages.academy/static/destinations/6.jpg',
+      description: 'Sochi famous for its crowded street markets with the best street food in Asia',
     }
   ],
   MIN_PICTURES_AMOUNT: 0,

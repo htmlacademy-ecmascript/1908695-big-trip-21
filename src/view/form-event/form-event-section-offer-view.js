@@ -1,32 +1,6 @@
 import { createElement } from '../../render.js';
 
-const Offer = {
-  luggage : {
-    type: 'luggage',
-    title: 'Add luggage',
-    price: 50,
-  },
-  comfort: {
-    type: 'comfort',
-    title: 'Switch to comfort',
-    price: 80,
-  },
-  meal: {
-    type: 'meal',
-    title: 'Add meal',
-    price: 15,
-  },
-  seats: {
-    type: 'seats',
-    title: 'Choose seats',
-    price: 5,
-  },
-  train: {
-    type: 'train',
-    title: 'Travel by train',
-    price: 40,
-  },
-};
+const DEFAULT_TYPE = 'flight';
 
 function createOfferSelectorTemplate(type, title, price) {
   return `<div class="event__offer-selector">
@@ -39,32 +13,38 @@ function createOfferSelectorTemplate(type, title, price) {
 </div>`;
 }
 
-function createOfferSelectorsHtml () {
+function getOffersOfType (offers) {
+  return offers.find(({type}) => type === DEFAULT_TYPE);
+}
+
+function createOfferSelectorsHtml (offers = '') {
   const selectors = [];
-  Object.values(Offer).forEach(({type, title, price}) =>{
+
+  getOffersOfType(offers).offers.forEach(({type, title, price}) =>{
     const selector = createOfferSelectorTemplate(type, title,price);
     selectors.push(selector);
   });
   return selectors.join('');
 }
 
-function createFormEventSectionOfferTemplate (title) {
-  return `<section class="event__section  event__section--offers">
+function createFormEventSectionOfferTemplate (title, offers = '') {
+  return `<section class="event__section  event__section--offers ${getOffersOfType(offers).offers.length ? '' : 'hidden'}">
   <h3 class="event__section-title  event__section-title--offers">${title}</h3>
 
   <div class="event__available-offers">
-   ${createOfferSelectorsHtml()}
+   ${createOfferSelectorsHtml(offers)}
   </div>
 </section>`;
 }
 
 export default class FormSectionOfferView {
-  constructor(title) {
+  constructor(title, offerList) {
     this.title = title;
+    this.offerList = offerList;
   }
 
   getTemplate () {
-    return createFormEventSectionOfferTemplate(this.title);
+    return createFormEventSectionOfferTemplate(this.title, this.offerList);
   }
 
   getElement () {

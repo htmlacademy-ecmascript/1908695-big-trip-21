@@ -1,4 +1,5 @@
 import { render } from '../render.js';
+import { createDatePickers } from '../utils/flatpickr.js';
 import TripItemView from '../view/trip-list/trip-item.js';
 import TripEventsListView from '../view/trip-list/trip-events-list-view.js';
 import TripEventView from '../view/trip-list/trip-event-view.js';
@@ -10,11 +11,14 @@ import FormSectionDestinationView from '../view/form-event/form-event-section-de
 import FormSectionOfferView from '../view/form-event/form-event-section-offer-view.js';
 import FormDestinationPhotos from '../view/form-event/form-event-destination-photos-view.js';
 
+
 const tripEventsContainerElement = document.querySelector('.trip-events');
 
 export default class TripEventsPresenter {
-  constructor(eventPoints) {
+  constructor(eventPoints, eventDestinations, eventOffers) {
     this.eventPoints = eventPoints;
+    this.eventDestinations = eventDestinations;
+    this.eventOffers = eventOffers;
   }
 
   tripEventsList = new TripEventsListView();
@@ -23,19 +27,20 @@ export default class TripEventsPresenter {
 
   formEdit = new FormEventView();
 
-  formEditHeader = new FormEventHeaderView('Delete');
-
   formEditRollupBtn = new FormEventRollupBtnView();
 
   formSectionDetails = new FormSectionDetailsView();
 
-  formSectionOffer = new FormSectionOfferView('offer');
-
-  formSectionDestination = new FormSectionDestinationView('destination');
-
-  formDestintaionPhotos = new FormDestinationPhotos();
-
   init () {
+    this.destinations = [...this.eventDestinations.getDestinations()];
+
+    this.offers = [...this.eventOffers.getOffers()];
+
+    const formEditHeader = new FormEventHeaderView('Delete', this.destinations);
+    const formSectionOffer = new FormSectionOfferView('offers', this.offers);
+    const formSectionDestination = new FormSectionDestinationView('destination', this.destinations);
+    const formDestintaionPhotos = new FormDestinationPhotos(this.destinations);
+
     this.points = [...this.eventPoints.getPoints()];
     render(this.tripEventsList, tripEventsContainerElement);
 
@@ -43,17 +48,21 @@ export default class TripEventsPresenter {
 
     render(this.formEdit, this.firstTripItem.getElement());
 
-    render(this.formEditHeader, this.formEdit.getElement());
+    render(formEditHeader, this.formEdit.getElement());
 
-    render(this.formEditRollupBtn, this.formEditHeader.getElement());
+    render(this.formEditRollupBtn, formEditHeader.getElement());
 
     render(this.formSectionDetails, this.formEdit.getElement());
 
-    render(this.formSectionOffer, this.formSectionDetails.getElement());
+    render(formSectionOffer, this.formSectionDetails.getElement());
 
-    render(this.formSectionDestination, this.formSectionDetails.getElement());
+    render(formSectionDestination, this.formSectionDetails.getElement());
 
-    render(this.formDestintaionPhotos, this.formSectionDetails.getElement());
+    render(formDestintaionPhotos, this.formSectionDetails.getElement());
+
+    const fromTimeInputElement = document.querySelector('#event-start-time-1');
+    const toTimeInputElement = document.querySelector('#event-end-time-1');
+    createDatePickers(fromTimeInputElement, toTimeInputElement);
 
     for (let i = 0; i < this.points.length; i++) {
       const tripItem = new TripItemView();
@@ -64,5 +73,3 @@ export default class TripEventsPresenter {
     }
   }
 }
-
-

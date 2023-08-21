@@ -1,4 +1,5 @@
 import { createElement } from '../../render.js';
+import { capitalize } from '../../utils/utils.js';
 
 const EventType = {
   taxi:  'taxi',
@@ -12,10 +13,20 @@ const EventType = {
   restaurant: 'restaurant',
 };
 
+function getEventType (evt) {
+  const typeButton = evt.target.closest('.event__type-input');
+  if (!typeButton) {
+    return;
+  }
+  return typeButton.value;
+}
+
+const onEventTypeChange = (evt) => getEventType(evt);
+
 function createEventTypeSelectorTemplate (type) {
   return `<div class="event__type-item">
   <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-  <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type[0].toUpperCase() + type.slice(1)}</label>
+  <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
 </div>`;
 }
 
@@ -28,6 +39,20 @@ function createEventSelectorsHtml () {
   return selectors.join('');
 }
 
+function createOptionsTemplate (option) {
+  return `<option value="${option}"></option>`;
+}
+
+function createOptionsHtml (destinations) {
+  const options = [];
+
+  destinations.forEach(({name}) =>{
+    const option = createOptionsTemplate(name);
+    options.push(option);
+  });
+
+  return options.join('');
+}
 function createFormEventTypeTemplate () {
   return `<div class="event__type-wrapper">
   <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -45,16 +70,14 @@ function createFormEventTypeTemplate () {
 </div>`;
 }
 
-function createFormEventDestinationTemplate () {
+function createFormEventDestinationTemplate (destinations) {
   return `<div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
     Flight
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Monaco" list="destination-list-1">
   <datalist id="destination-list-1">
-    <option value="Amsterdam"></option>
-    <option value="Geneva"></option>
-    <option value="Chamonix"></option>
+    ${createOptionsHtml(destinations)}
   </datalist>
 </div>`;
 }
@@ -62,10 +85,10 @@ function createFormEventDestinationTemplate () {
 function createFormEventTimeTemplate () {
   return `<div class="event__field-group  event__field-group--time">
   <label class="visually-hidden" for="event-start-time-1">From</label>
-  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" placeholder="19/03/24 00:00" value="">
   &mdash;
   <label class="visually-hidden" for="event-end-time-1">To</label>
-  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" placeholder="19/03/24 00:00" value="">
 </div>`;
 }
 
@@ -75,7 +98,7 @@ function createFormEventPriceTemplate () {
     <span class="visually-hidden">Price</span>
     &euro;
   </label>
-  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
 </div>`;
 }
 
@@ -87,10 +110,10 @@ function createFormEventCancelBtnTemplate (buttonName) {
   return `<button class="event__reset-btn" type="reset">${buttonName}</button>`;
 }
 
-function createFormEventHeaderTemplate (buttonName) {
+function createFormEventHeaderTemplate (buttonName, destinations) {
   return `<header class="event__header">
   ${createFormEventTypeTemplate()}
-  ${createFormEventDestinationTemplate()}
+  ${createFormEventDestinationTemplate(destinations)}
   ${createFormEventTimeTemplate()}
   ${createFormEventPriceTemplate()}
   ${createFormEventSubmitBtnTemplate()}
@@ -99,12 +122,13 @@ function createFormEventHeaderTemplate (buttonName) {
 }
 
 export default class FormEventHeaderView {
-  constructor(buttonName) {
+  constructor(buttonName, destinations) {
     this.buttonName = buttonName;
+    this.destinations = destinations;
   }
 
   getTemplate () {
-    return createFormEventHeaderTemplate(this.buttonName);
+    return createFormEventHeaderTemplate(this.buttonName, this.destinations);
   }
 
   getElement () {
@@ -118,3 +142,5 @@ export default class FormEventHeaderView {
     this.element = null;
   }
 }
+
+export {onEventTypeChange};

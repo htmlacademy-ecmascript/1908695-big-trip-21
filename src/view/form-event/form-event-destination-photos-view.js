@@ -1,28 +1,33 @@
 import { createElement } from '../../render.js';
 
-function createPhotoTemplate (src) {
-  return `<img class="event__photo" src="img/photos/${src}.jpg" alt="Event photo">`;
+function createPhotoTemplate (src, altDescription) {
+  return `<img class="event__photo" src="${src}" alt="${altDescription}">`;
 }
 
-function createPhotosHtml () {
+function createPhotosHtml (photos) {
   const pictures = [];
-  for (let i = 1; i <= 5; i++) {
-    pictures.push(createPhotoTemplate(i));
+  if (photos.length) {
+    photos.map(({src, description}) => {
+      pictures.push(createPhotoTemplate(src, description));
+    });
   }
   return pictures.join('');
 }
 
-
-function createFormEventDestinationPhotosTemplate () {
-  return `<div class="event__photos-container">
+function createFormEventDestinationPhotosTemplate (photos = '') {
+  return `<div class="event__photos-container ${photos.length ? '' : 'hidden'}">
   <div class="event__photos-tape">
-  ${createPhotosHtml()}</div>
+  ${createPhotosHtml(photos)}</div>
   </div>`;
 }
 
 export default class FormDestinationPhotos {
+  constructor(destinationsPhotos){
+    this.destinationsPhotos = destinationsPhotos;
+  }
+
   getTemplate () {
-    return createFormEventDestinationPhotosTemplate();
+    return createFormEventDestinationPhotosTemplate(this.destinationsPhotos);
   }
 
   getElement () {

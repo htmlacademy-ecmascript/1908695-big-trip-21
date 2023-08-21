@@ -1,4 +1,5 @@
 import { render } from '../render.js';
+import { createDatePickers } from '../utils/flatpickr.js';
 import TripItemView from '../view/trip-list/trip-item.js';
 import TripEventsListView from '../view/trip-list/trip-events-list-view.js';
 import TripEventView from '../view/trip-list/trip-event-view.js';
@@ -13,49 +14,61 @@ import FormDestinationPhotos from '../view/form-event/form-event-destination-pho
 const tripEventsContainerElement = document.querySelector('.trip-events');
 
 export default class TripEventsPresenter {
+  constructor(pointsModel, destinationsModel, offersModel) {
+    this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
+    this.pointsModel = pointsModel;
+    this.points = [...this.pointsModel.getPoints()];
+    this.destinations = [...this.destinationsModel.getDestinations()];
+    this.offers = [...this.offersModel.getOffers()];
+  }
+
   tripEventsList = new TripEventsListView();
 
   firstTripItem = new TripItemView();
 
   formEdit = new FormEventView();
 
-  formEditHeader = new FormEventHeaderView('Delete');
-
   formEditRollupBtn = new FormEventRollupBtnView();
 
   formSectionDetails = new FormSectionDetailsView();
 
-  formSectionOffer = new FormSectionOfferView('offer');
-
-  formSectionDestination = new FormSectionDestinationView('destination');
-
-  formDestintaionPhotos = new FormDestinationPhotos();
-
   init () {
+    const formEditHeader = new FormEventHeaderView('Delete', this.destinations);
+    const formSectionOffer = new FormSectionOfferView('offers', this.offersModel.getByType());
+    const formSectionDestination = new FormSectionDestinationView('destination', this.destinationsModel.getById(/*this.destination.id*/).description);
+    const formDestintaionPhotos = new FormDestinationPhotos(this.destinationsModel.getById(/*this.destination.id*/).pictures);
+
     render(this.tripEventsList, tripEventsContainerElement);
 
     render (this.firstTripItem, this.tripEventsList.getElement());
 
     render(this.formEdit, this.firstTripItem.getElement());
 
-    render(this.formEditHeader, this.formEdit.getElement());
+    render(formEditHeader, this.formEdit.getElement());
 
-    render(this.formEditRollupBtn, this.formEditHeader.getElement());
+    render(this.formEditRollupBtn, formEditHeader.getElement());
 
     render(this.formSectionDetails, this.formEdit.getElement());
 
-    render(this.formSectionOffer, this.formSectionDetails.getElement());
+    render(formSectionOffer, this.formSectionDetails.getElement());
 
-    render(this.formSectionDestination, this.formSectionDetails.getElement());
+    render(formSectionDestination, this.formSectionDetails.getElement());
 
-    render(this.formDestintaionPhotos, this.formSectionDetails.getElement());
+    render(formDestintaionPhotos, this.formSectionDetails.getElement());
 
-    for (let i = 0; i < 3; i++) {
+    const fromTimeInputElement = document.querySelector('#event-start-time-1');
+
+    const toTimeInputElement = document.querySelector('#event-end-time-1');
+    createDatePickers(fromTimeInputElement, toTimeInputElement);
+
+    this.points.forEach((point) => {
+
       const tripItem = new TripItemView();
-      render(new TripEventView('MAR 18', 'taxi', 'Taxi Amsterdam', '10:30', '11:00', '30M', 20), tripItem.getElement());
+
+      render(new TripEventView(point, this.offers, this.destinationsModel.getById(point.destination).name), tripItem.getElement());
+
       render(tripItem, this.tripEventsList.getElement());
-    }
+    });
   }
 }
-
-

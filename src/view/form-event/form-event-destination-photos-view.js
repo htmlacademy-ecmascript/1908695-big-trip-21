@@ -1,5 +1,4 @@
 import { createElement } from '../../render.js';
-import { getDestination } from './form-event-section-destination-view.js';
 
 function createPhotoTemplate (src, altDescription) {
   return `<img class="event__photo" src="${src}" alt="${altDescription}">`;
@@ -23,12 +22,12 @@ function createFormEventDestinationPhotosTemplate (photos = '') {
 }
 
 export default class FormDestinationPhotos {
-  constructor(destinations){
-    this.destinations = destinations;
+  constructor(destinationsPhotos){
+    this.destinationsPhotos = destinationsPhotos;
   }
 
   getTemplate () {
-    return createFormEventDestinationPhotosTemplate(getDestination(this.destinations)?.pictures);
+    return createFormEventDestinationPhotosTemplate(this.destinationsPhotos);
   }
 
   getElement () {

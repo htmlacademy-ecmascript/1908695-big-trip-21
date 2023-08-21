@@ -1,7 +1,5 @@
 import { createElement } from '../../render.js';
 
-const DEFAULT_TYPE = 'flight';
-
 function createOfferSelectorTemplate(type, title, price) {
   return `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}">
@@ -13,14 +11,10 @@ function createOfferSelectorTemplate(type, title, price) {
 </div>`;
 }
 
-function getOffersOfType (offers) {
-  return offers.find(({type}) => type === DEFAULT_TYPE);
-}
-
 function createOfferSelectorsHtml (offers = '') {
   const selectors = [];
 
-  getOffersOfType(offers).offers.forEach(({type, title, price}) =>{
+  offers.forEach(({type, title, price}) =>{
     const selector = createOfferSelectorTemplate(type, title,price);
     selectors.push(selector);
   });
@@ -28,7 +22,7 @@ function createOfferSelectorsHtml (offers = '') {
 }
 
 function createFormEventSectionOfferTemplate (title, offers = '') {
-  return `<section class="event__section  event__section--offers ${getOffersOfType(offers).offers.length ? '' : 'hidden'}">
+  return `<section class="event__section  event__section--offers ${offers.length ? '' : 'hidden'}">
   <h3 class="event__section-title  event__section-title--offers">${title}</h3>
 
   <div class="event__available-offers">

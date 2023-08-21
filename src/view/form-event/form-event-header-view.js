@@ -1,4 +1,5 @@
 import { createElement } from '../../render.js';
+import { capitalize } from '../../utils/utils.js';
 
 const EventType = {
   taxi:  'taxi',
@@ -25,7 +26,7 @@ const onEventTypeChange = (evt) => getEventType(evt);
 function createEventTypeSelectorTemplate (type) {
   return `<div class="event__type-item">
   <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-  <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type[0].toUpperCase() + type.slice(1)}</label>
+  <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
 </div>`;
 }
 
@@ -49,6 +50,7 @@ function createOptionsHtml (destinations) {
     const option = createOptionsTemplate(name);
     options.push(option);
   });
+
   return options.join('');
 }
 function createFormEventTypeTemplate () {

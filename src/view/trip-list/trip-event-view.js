@@ -1,15 +1,9 @@
 import { createElement } from '../../render.js';
-import {destinations, offers} from '../../mock/mock-data.js';
-import {formatEventDuration, formatEventDate, formatEventDatetime, formatEventFromToDate} from '../../utils/dayjs.js';
+import { formatEventDuration, formatEventDate, formatEventDatetime, formatEventFromToDate} from '../../utils/dayjs.js';
+import { POINT_EMPTY } from '../../mock/const.js';
 
-
-function getCityName (point) {
-  const cityObject = destinations.find((destination) => destination.id === point.destination);
-  return cityObject.name;
-}
-
-function getOffers (point) {
-  const pointTypeOffer = offers.find((offer) => offer.type === point.type);
+function getOffers (point, offersList) {
+  const pointTypeOffer = offersList.find((offer) => offer.type === point.type);
   return pointTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
 }
 
@@ -21,16 +15,16 @@ function createOfferTemplate (offerTitle, offerPrice) {
 </li>`;
 }
 
-function renderChosenOffers (point) {
+function renderChosenOffers (point, offersList) {
   const listItems = [];
-  const options = getOffers(point);
+  const options = getOffers(point, offersList);
   options.forEach((option) => {
     listItems.push(createOfferTemplate(option.title, option.price));
   });
   return listItems.join('');
 }
 
-function createTripEventTemplate (point) {
+function createTripEventTemplate (point, offersList, cityName) {
   const { dateFrom, type, dateTo, basePrice, isFavorite } = point;
 
   return `<div class="event">
@@ -38,7 +32,7 @@ function createTripEventTemplate (point) {
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type} ${getCityName(point)}</h3>
+    <h3 class="event__title">${type} ${cityName}</h3>
     <div class="event__schedule">
       <p class="event__time">
         <time class="event__start-time" datetime="${dateFrom.slice(0,16)}">${formatEventFromToDate(dateFrom)}</time>
@@ -52,7 +46,7 @@ function createTripEventTemplate (point) {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers ${point.offers.length ? '' : 'hidden'}">
-    ${renderChosenOffers(point)}
+    ${renderChosenOffers(point, offersList)}
 
     </ul>
     <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''} type="button">
@@ -68,16 +62,14 @@ function createTripEventTemplate (point) {
 }
 
 export default class TripEventView {
-  constructor (dateFrom, type, dateTo, basePrice, isFavorite) {
-    this.dateFrom = dateFrom;
-    this.type = type;
-    this.dateTo = dateTo;
-    this.basePrice = basePrice;
-    this.isFavorite = isFavorite;
+  constructor (point = POINT_EMPTY, offersList, cityName) {
+    this.point = point;
+    this.offersList = offersList;
+    this.cityName = cityName;
   }
 
   getTemplate () {
-    return createTripEventTemplate(this.dateFrom, this.type, this.dateTo, this.basePrice, this.isFavorite);
+    return createTripEventTemplate(this.point, this.offersList, this.cityName);
   }
 
   getElement () {

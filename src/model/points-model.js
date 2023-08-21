@@ -1,9 +1,8 @@
-import { getRandomPoint } from '../mock/mock-data.js';
-
-const POINTS_COUNT = 10;
-
 export default class PointsModel {
-  points = Array.from({length: POINTS_COUNT}, getRandomPoint);
+  constructor(service) {
+    this.service = service;
+    this.points = this.service.getPoints();
+  }
 
   getPoints() {
     return this.points;

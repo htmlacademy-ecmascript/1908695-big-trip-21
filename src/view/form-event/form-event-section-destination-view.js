@@ -1,11 +1,5 @@
 import { createElement } from '../../render.js';
 
-const DEFAULT_DESTINATION = 'Monaco';
-
-function getDestination (destinations) {
-  return destinations.find((city) => city.name === DEFAULT_DESTINATION);
-}
-
 function createFormEventSectionDestinationTemplate (title, description) {
   return `   <section class="event__section  event__section--destination ${description ? '' : 'hidden'}">
   <h3 class="event__section-title  event__section-title--destination">${title}</h3>
@@ -15,13 +9,13 @@ function createFormEventSectionDestinationTemplate (title, description) {
 }
 
 export default class FormSectionDestinationView {
-  constructor(title, destination) {
+  constructor(title, destinationId) {
     this.title = title;
-    this.destination = destination;
+    this.destinationId = destinationId;
   }
 
   getTemplate () {
-    return createFormEventSectionDestinationTemplate (this.title, getDestination(this.destination)?.description);
+    return createFormEventSectionDestinationTemplate (this.title, this.destinationId);
   }
 
   getElement () {
@@ -35,6 +29,4 @@ export default class FormSectionDestinationView {
     this.element = null;
   }
 }
-
-export { getDestination };
 

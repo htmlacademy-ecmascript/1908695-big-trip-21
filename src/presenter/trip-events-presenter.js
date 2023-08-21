@@ -11,14 +11,16 @@ import FormSectionDestinationView from '../view/form-event/form-event-section-de
 import FormSectionOfferView from '../view/form-event/form-event-section-offer-view.js';
 import FormDestinationPhotos from '../view/form-event/form-event-destination-photos-view.js';
 
-
 const tripEventsContainerElement = document.querySelector('.trip-events');
 
 export default class TripEventsPresenter {
-  constructor(eventPoints, eventDestinations, eventOffers) {
-    this.eventPoints = eventPoints;
-    this.eventDestinations = eventDestinations;
-    this.eventOffers = eventOffers;
+  constructor(pointsModel, destinationsModel, offersModel) {
+    this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
+    this.pointsModel = pointsModel;
+    this.points = [...this.pointsModel.getPoints()];
+    this.destinations = [...this.destinationsModel.getDestinations()];
+    this.offers = [...this.offersModel.getOffers()];
   }
 
   tripEventsList = new TripEventsListView();
@@ -32,16 +34,11 @@ export default class TripEventsPresenter {
   formSectionDetails = new FormSectionDetailsView();
 
   init () {
-    this.destinations = [...this.eventDestinations.getDestinations()];
-
-    this.offers = [...this.eventOffers.getOffers()];
-
     const formEditHeader = new FormEventHeaderView('Delete', this.destinations);
-    const formSectionOffer = new FormSectionOfferView('offers', this.offers);
-    const formSectionDestination = new FormSectionDestinationView('destination', this.destinations);
-    const formDestintaionPhotos = new FormDestinationPhotos(this.destinations);
+    const formSectionOffer = new FormSectionOfferView('offers', this.offersModel.getByType());
+    const formSectionDestination = new FormSectionDestinationView('destination', this.destinationsModel.getById(/*this.destination.id*/).description);
+    const formDestintaionPhotos = new FormDestinationPhotos(this.destinationsModel.getById(/*this.destination.id*/).pictures);
 
-    this.points = [...this.eventPoints.getPoints()];
     render(this.tripEventsList, tripEventsContainerElement);
 
     render (this.firstTripItem, this.tripEventsList.getElement());
@@ -61,15 +58,17 @@ export default class TripEventsPresenter {
     render(formDestintaionPhotos, this.formSectionDetails.getElement());
 
     const fromTimeInputElement = document.querySelector('#event-start-time-1');
+
     const toTimeInputElement = document.querySelector('#event-end-time-1');
     createDatePickers(fromTimeInputElement, toTimeInputElement);
 
-    for (let i = 0; i < this.points.length; i++) {
+    this.points.forEach((point) => {
+
       const tripItem = new TripItemView();
 
-      render(new TripEventView(this.points[i]), tripItem.getElement());
+      render(new TripEventView(point, this.offers, this.destinationsModel.getById(point.destination).name), tripItem.getElement());
 
       render(tripItem, this.tripEventsList.getElement());
-    }
+    });
   }
 }
